@@ -1,0 +1,34 @@
+int main( void )
+{
+	try{
+		Partition *p1 = new Partition("p1.ini");
+		Partition *p2 = new Partition("p2.ini");
+
+		Directory d;
+
+		kernelFS = new KernelFS();
+		int c = kernelFS->mount(p1);
+		c = kernelFS->mount(p2);
+		c = kernelFS->format('B');
+		c = kernelFS->format('A');
+		
+		kernelFS->readRootDir('B',0,d);	
+		c = kernelFS->unmount('B');	
+		kernelFS->open("A:\porn.avi");
+		kernelFS->open("A:\wow.txt");
+		kernelFS->open("A:\zzz.aaa");	
+		cout<<endl<<c;
+
+	}
+	catch(KernelException e){
+		cout<<e.what();
+	}
+	catch(exception e){
+		cout<<e.what();
+	}
+
+	cout<<"Main finished!"<<endl;
+	cin.get();
+
+	return 0;
+}

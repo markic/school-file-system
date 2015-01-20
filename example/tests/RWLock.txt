@@ -1,0 +1,46 @@
+#define THREADCOUNT 5
+
+File *file;
+
+DWORD WINAPI fr(LPVOID a);
+DWORD WINAPI fw(LPVOID a);
+
+int main( void )
+{
+	HANDLE aThread[THREADCOUNT];
+	DWORD ThreadID;
+	file = new File();
+	try{
+
+		aThread[0] = CreateThread(0, 0, fr, 0, 0, &ThreadID);
+		aThread[1] = CreateThread(0, 0, fr, 0, 0, &ThreadID);
+		aThread[2] = CreateThread(0, 0, fr, 0, 0, &ThreadID);
+		aThread[3] = CreateThread(0, 0, fw, 0, 0, &ThreadID);
+		aThread[4] = CreateThread(0, 0, fw, 0, 0, &ThreadID);
+		
+		// Wait for all threads to terminate
+		WaitForMultipleObjects(THREADCOUNT, aThread, TRUE, INFINITE);
+
+		for(int i = 0; i < THREADCOUNT; i++ )
+			CloseHandle(aThread[i]);
+	}
+	catch(KernelException e){
+		std::cout<<e.what();
+	}
+
+	std::cin.get();
+
+	delete file;
+
+	return 0;
+}
+
+DWORD WINAPI fr(LPVOID a){
+	file->read();
+	return 0;
+}
+
+DWORD WINAPI fw(LPVOID a){
+	file->write();
+	return 0;
+}

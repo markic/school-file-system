@@ -1,0 +1,64 @@
+//File: main.cpp
+
+#include <iostream>
+#include <windows.h>
+#include "kernelexception.h"
+#include "mutex.h"
+#include "semaphore.h"
+#include "file.h"
+
+#define THREADCOUNT 5
+
+DWORD WINAPI f(LPVOID a);
+
+Mutex *mutex;
+Semaphore *sem;
+
+int main( void )
+{
+        HANDLE aThread[THREADCOUNT];
+        DWORD ThreadID;
+        try{
+                mutex = new Mutex();
+                sem = new Semaphore(1);
+
+                for(int i = 0; i < THREADCOUNT; i++ )
+                        aThread[i] = CreateThread(0, 0, f, 0, 0, &ThreadID);
+
+                // Wait for all threads to terminate
+                WaitForMultipleObjects(THREADCOUNT, aThread, TRUE, INFINITE);
+
+                for(int i = 0; i < THREADCOUNT; i++ )
+                        CloseHandle(aThread[i]);
+                
+                delete mutex;
+                delete sem;
+        }
+        catch(KernelException e){
+                std::cout<<e.what();
+        }
+
+        std::cin.get();
+
+        return 0;
+}
+
+DWORD WINAPI f(LPVOID a){
+        //mutex->wait();
+        sem->wait();
+        
+        std::cout<<"1";
+        for (long i = 0; i < 100000 ; i++);
+
+        std::cout<<"2";
+        for (long i = 0; i < 100000 ; i++);
+
+        std::cout<<"3";
+        for (long i = 0; i < 100000 ; i++);
+        std::cout<<std::endl;
+        
+        sem->signal();
+        //mutex->signal();
+
+        return 0;
+}

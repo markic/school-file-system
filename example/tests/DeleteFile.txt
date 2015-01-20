@@ -1,0 +1,13 @@
+		int c = FS::mount(p1);
+		c = FS::mount(p2);
+		c = FS::format('B');
+		FS::readRootDir('B',0,d);	
+		//c = FS::unmount('B');
+		
+		FS::format('A');	
+		FS::open("A:\porn.avi");
+		c = FS::doesExist("A:\porn.avi");
+		c = FS::deleteFile("A:\porn.avi");
+		
+		c = FS::doesExist("A:\porn.avi");
+		//c = FS::doesExist("A:\wow.txt");

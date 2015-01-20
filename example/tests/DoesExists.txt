@@ -1,0 +1,39 @@
+int main( void )
+{
+	try{
+		Partition *p1 = new Partition("p1.ini");
+		Partition *p2 = new Partition("p2.ini");
+		Directory d;
+		
+		int c = FS::mount(p1);
+		c = FS::mount(p2);
+		c = FS::format('B');
+		FS::readRootDir('B',0,d);	
+		//c = FS::unmount('B');
+		
+		FS::format('A');
+		
+		FS::open("A:\porn.avi");
+		c = FS::doesExist("A:\porn.avi");
+		c = FS::doesExist("A:\porn.vi");
+		c = FS::doesExist("A:\wow.txt");
+		
+		FS::open("A:\wow.txt");
+		FS::open("A:\zzz.aaa");	
+		c = FS::doesExist("A:\porn.avi");
+		c = FS::doesExist("A:\wow.txt");
+		cout<<endl<<c;
+
+	}
+	catch(KernelException e){
+		cout<<e.what();
+	}
+	catch(exception e){
+		cout<<e.what();
+	}
+
+	cout<<"Main finished!"<<endl;
+	cin.get();
+
+	return 0;
+}

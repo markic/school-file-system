@@ -1,0 +1,69 @@
+// File: main.cpp
+
+#include <iostream>
+#include <windows.h>
+#include "kernelexception.h"
+#include "mutex.h"
+#include "semaphore.h"
+#include "part.h"
+#include "fs.h"
+#include "kernelfs.h"
+#include "file.h"
+
+using namespace std;
+
+int main( void )
+{
+	try{
+		Partition *p1 = new Partition("p1.ini");
+		Partition *p2 = new Partition("p2.ini");
+		Directory d1, d2;
+		
+		int c = FS::mount(p1);
+		c = FS::mount(p2);
+		c = FS::format('B');	
+		c = FS::unmount('B');
+		
+		FS::format('A');
+
+		File *file = FS::open("A:\\porn.avi");				
+		File *one = FS::open("A:\\wow.exe");
+		File *two = FS::open("A:\\wa.tt");
+		c = FS::readRootDir('A',0,d1);
+		
+		for(unsigned long i = 0; i < 510000; i++)
+			file->write(10, "chuck test");
+
+		***************$$$$$$$$***************
+		testirati za i = 100, 500, 5000, 1000
+		510000 nema dovolno mesta, opet radi
+		
+		one->write(5,"smori");
+		two->write(7,"blablax");
+		file->write(5,"dadad");
+
+		c = file->filePos();
+		cout<<endl<<c;
+
+		c = FS::readRootDir('A',0,d2);
+
+		FS::doesExist("A:\\porn.avi");
+		c = FS::readRootDir('A',0,d1);
+		c = FS::deleteFile("A:\\porn.avi");
+		c = FS::readRootDir('A',1,d2);
+		
+		cout<<endl<<c;
+
+	}
+	catch(KernelException e){
+		cout<<e.what();
+	}
+	catch(exception e){
+		cout<<e.what();
+	}
+
+	cout<<"Main finished!"<<endl;
+	cin.get();
+
+	return 0;
+}

@@ -1,0 +1,58 @@
+// File: main.cpp
+
+#include <iostream>
+#include <windows.h>
+#include "kernelexception.h"
+#include "mutex.h"
+#include "semaphore.h"
+#include "part.h"
+#include "fs.h"
+#include "kernelfs.h"
+#include "file.h"
+
+using namespace std;
+
+int main( void )
+{
+	try{
+		Partition *p1 = new Partition("p1.ini");
+		Partition *p2 = new Partition("p2.ini");
+
+		int c = FS::mount(p1);
+		c = FS::mount(p2);
+		c = FS::format('B');	
+		c = FS::unmount('B');
+
+		FS::format('A');
+
+		File *file = FS::open("A:\\porn.avi");				
+		for(unsigned long i = 0; i < 128000; i++)
+			file->write(10, "chuck test");
+
+		file->seek(50);
+
+		c = file->truncate();
+		cout<<endl<<c;
+
+		c = file->filePos();
+		cout<<endl<<c;
+
+		c = file->eof();
+		cout<<endl<<c;
+		
+		c = file->getFileSize();
+		cout<<endl<<c;
+
+	}
+	catch(KernelException e){
+		cout<<e.what();
+	}
+	catch(exception e){
+		cout<<e.what();
+	}
+
+	cout<<"Main finished!"<<endl;
+	cin.get();
+
+	return 0;
+}

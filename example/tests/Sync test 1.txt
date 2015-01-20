@@ -1,0 +1,63 @@
+// File: main.cpp
+
+#include <iostream>
+#include <windows.h>
+#include "kernelexception.h"
+#include "part.h"
+#include "fs.h"
+#include "file.h"
+
+using namespace std;
+
+int main( void )
+{
+	try{
+		Partition *p1 = new Partition("p1.ini");
+		Partition *p2 = new Partition("p2.ini");
+
+		int c = FS::mount(p1);
+		c = FS::mount(p2);
+		c = FS::format('B');	
+		c = FS::unmount('B');	
+		FS::format('A');
+
+		c = FS::format('D');
+
+		FS::declare("A:\\porn.avi", 1);
+		FS::declare("A:\\porn.avi", 0);
+		FS::declare("A:\\porn.avi", 1);
+
+		File *file = FS::open("A:\\porn.avi");
+		FS::open("A:\\porn2.avi");
+		FS::open("A:\\porn3.avi");
+
+
+		for(unsigned long i = 0; i < 1000; i++)
+			file->write(10, "chuck test");
+
+		c = file->seek(3000);
+
+		char readBuf[8000] = "";
+		c = file->read(8000, readBuf);
+		cout<<endl<<c;
+
+		delete file;
+
+		FS::declare("A:\\porn.avi", 0);
+
+		c = FS::deleteFile("A:\\porn.avi");
+		cout<<endl<<c;
+		
+	}
+	catch(KernelException e){
+		cout<<e.what();
+	}
+	catch(exception e){
+		cout<<e.what();
+	}
+
+	cout<<"Main finished!"<<endl;
+	cin.get();
+
+	return 0;
+}
