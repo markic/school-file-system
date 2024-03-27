@@ -11,8 +11,6 @@ School of Electrical Engineering, University of Belgrade, Serbia.
 
 
 Developed by Marin Markić. No licence. November - December 2012.
-- marinmarkic@mail.com
-
 
 ### How to use file system: (see example)
 
